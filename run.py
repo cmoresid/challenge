@@ -1,11 +1,12 @@
-from threading import Thread, Lock
+"""Contains main driver logic."""
+
+import time
+
+from threading import Lock
 from Queue import Queue
 from api_request import ChallengeApi
 from worker import DownloadMessageTreeWorker
 from traversal import MessageTreeTraversal
-
-import cPickle as pickle
-import time
 
 # Number of threads to spin up to help build
 # the tree
@@ -23,17 +24,17 @@ def download_tree():
     api = ChallengeApi()
 
     session_id = api.get_session()
-    root_id, result = api.get_start(session_id)
-    nodes[root_id] = result
+    root_id, children = api.get_start(session_id)
+    nodes[root_id] = children
 
-    if type(result) is list:
-        for n in result:
-            queue.put(n)
+    if isinstance(children, list):
+        for child_id in children:
+            queue.put(child_id)
     else:
-        queue.put(result)
+        queue.put(children)
 
     print '\tSpawning %s threads ...' % (NUM_OF_THREADS,)
-    for i in range(NUM_OF_THREADS):
+    for _ in range(NUM_OF_THREADS):
         worker = DownloadMessageTreeWorker(api, session_id, queue, visited, \
                                            nodes, vlock, nlock)
         worker.daemon = True
