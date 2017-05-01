@@ -15,7 +15,7 @@ class MessageTreeTraversal(object):
         queue = self.nodes['start']
         visited = set()
 
-        while not queue:
+        while queue:
             current_id = queue.pop(0)
 
             if current_id in visited:

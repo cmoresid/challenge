@@ -50,4 +50,4 @@ if __name__ == "__main__":
     tree_nodes = download_tree()
     print 'Building secret message from tree ...'
     tree_traversal = MessageTreeTraversal('start', tree_nodes)
-    print '\n\nSecret Message: %s' % (tree_traversal.get_message(),)
+    print '\nSecret Message: %s\n' % (tree_traversal.get_message(),)
